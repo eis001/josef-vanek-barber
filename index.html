@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Josef Vaněk – Pánské kadeřnictví & Barber</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Moderní barber shop Josef Vaněk – precizní pánský střih, úprava vousů a osobitý styl ve Statenicích."
+  />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: '#050608',
+            surface: '#0b0e12',
+            surfaceMuted: '#141820',
+            accent: '#c7a76a',
+            accentSoft: '#e0cda0'
+          },
+          fontFamily: {
+            sans: ['system-ui', 'ui-sans-serif', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom booking frame */
+    .booking-frame {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-radius: 0.75rem;
+      border-width: 1px;
+      border-color: rgba(199, 167, 106, 0.4);
+      color: #e5e7eb;
+      background: radial-gradient(circle at top left, rgba(199, 167, 106, 0.12), transparent),
+        radial-gradient(circle at bottom right, rgba(199, 167, 106, 0.08), transparent);
+      padding: 1.25rem;
+    }
+
+    .booking-frame iframe {
+      width: 100%;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #050608;
+      height: 220px;
+    }
+
+    /* Simple fade-in on scroll */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="bg-background text-gray-100 font-sans antialiased">
+  <!-- Top gradient / subtle background -->
+  <div
+    class="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-white/5 via-transparent to-transparent opacity-60"
+  ></div>
+
+  <!-- Page wrapper -->
+  <div class="min-h-screen flex flex-col">
+    <!-- Header / Navigation -->
+    <header
+      class="fixed inset-x-0 top-0 z-40 border-b border-white/5 bg-background/95 backdrop-blur-sm"
+    >
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo / Brand -->
+          <a href="#uvod" class="flex items-center gap-3 group">
+            <div
+              class="h-9 w-9 rounded-full border border-accent/60 flex items-center justify-center bg-surface shadow-md shadow-black/40 group-hover:shadow-accent/30 transition-shadow"
+            >
+              <span
+                class="text-accent text-lg font-semibold tracking-wide"
+              >
+                JV
+              </span>
+            </div>
+            <div class="flex flex-col leading-tight">
+              <span class="text-sm font-semibold tracking-wide uppercase">
+                Josef Vaněk
+              </span>
+              <span class="text-[11px] text-gray-400">
+                Pánské kadeřnictví & Barber
+              </span>
+            </div>
+          </a>
+
+          <!-- Desktop nav -->
+          <nav class="hidden md:flex items-center gap-8 text-sm">
+            <a href="#uvod" class="text-gray-300 hover:text-accent transition-colors">
+              Úvod
+            </a>
+            <a href="#sluzby" class="text-gray-300 hover:text-accent transition-colors">
+              Služby
+            </a>
+            <a href="#cenik" class="text-gray-300 hover:text-accent transition-colors">
+              Ceník
+            </a>
+            <a href="#galerie" class="text-gray-300 hover:text-accent transition-colors">
+              Galerie
+            </a>
+            <a href="#rezervace" class="text-gray-300 hover:text-accent transition-colors">
+              Rezervace
+            </a>
+            <a href="#kontakt" class="text-gray-300 hover:text-accent transition-colors">
+              Kontakt
+            </a>
+            <a
+              href="#rezervace"
+              class="inline-flex items-center gap-2 rounded-full border border-accent/60 bg-accent/90 px-4 py-2 text-xs font-semibold tracking-wide uppercase text-background shadow-lg shadow-black/50 hover:bg-accent transition-colors"
+            >
+              Rezervovat termín
+            </a>
+          </nav>
+
+          <!-- Mobile menu button -->
+          <button
+            id="mobile-menu-toggle"
+            class="md:hidden inline-flex items-center justify-center rounded-full border border-white/10 bg-surface h-10 w-10 text-gray-200 hover:text-accent hover:border-accent/60 transition-colors"
+            aria-label="Otevřít navigaci"
+          >
+            <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
+                d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="icon-close" xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile nav menu -->
+      <nav
+        id="mobile-menu"
+        class="md:hidden max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out bg-background/98 border-t border-white/5"
+      >
+        <div class="px-4 pt-2 pb-4 space-y-1 text-sm">
+          <a href="#uvod" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Úvod
+          </a>
+          <a href="#sluzby" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Služby
+          </a>
+          <a href="#cenik" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Ceník
+          </a>
+          <a href="#galerie" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Galerie
+          </a>
+          <a href="#rezervace" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Rezervace
+          </a>
+          <a href="#kontakt" class="block py-2 text-gray-200 hover:text-accent transition-colors">
+            Kontakt
+          </a>
+          <a
+            href="#rezervace"
+            class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full border border-accent/70 bg-accent/90 px-4 py-2 text-xs font-semibold tracking-wide uppercase text-background shadow-lg shadow-black/60 hover:bg-accent transition-colors"
+          >
+            Rezervovat termín
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-1 pt-20 md:pt-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Úvod -->
+        <section
+          id="uvod"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-16 md:py-24"
+        >
+          <div class="grid md:grid-cols-[minmax(0,1.25fr)_minmax(0,0.9fr)] gap-12 lg:gap-20 items-center">
+            <div class="max-w-xl">
+              <p class="text-xs font-semibold tracking-[0.25em] uppercase text-accent mb-4">
+                Moderní barber shop
+              </p>
+              <h1
+                class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4"
+              >
+                Josef Vaněk – Pánské kadeřnictví & Barber
+              </h1>
+              <p class="text-lg md:text-xl text-gray-200 mb-6">
+                Precizní střih. Osobitý styl.
+              </p>
+              <p class="text-sm md:text-base text-gray-300 leading-relaxed mb-9">
+                Vítejte v moderním barber shopu, kde se tradice potkává se současnými
+                trendy. Zakládáme si na špičkové kvalitě pánských střihů a naprosto
+                individuálním přístupu ke každému z vás. Ať už hledáte klasiku, nebo
+                chcete oživit svůj vzhled, postaráme se o to, abyste odcházeli
+                s dokonalým výsledkem.
+              </p>
+              <div class="flex flex-wrap items-center gap-4">
+                <a
+                  href="#rezervace"
+                  class="inline-flex items-center gap-2 rounded-full border border-accent/70 bg-accent px-6 py-3 text-xs md:text-sm font-semibold tracking-wide uppercase text-background shadow-lg shadow-black/60 hover:bg-accentSoft hover:border-accentSoft transition-colors"
+                >
+                  Rezervovat termín
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
+                      d="M5 12h14M13 5l7 7-7 7" />
+                  </svg>
+                </a>
+                <span class="text-xs md:text-sm text-gray-400">
+                  Individuální přístup • 60 minut péče
+                </span>
+              </div>
+            </div>
+
+            <!-- Hero image / card -->
+            <div class="relative md:pl-6 lg:pl-8">
+              <div
+                class="absolute -top-6 -right-4 h-28 w-28 rounded-full bg-accent/10 blur-3xl"
+              ></div>
+              <div
+                class="relative rounded-2xl bg-surface border border-white/5 overflow-hidden shadow-2xl shadow-black/60 max-w-sm mx-auto md:max-w-md"
+              >
+                <div class="aspect-[3/4] sm:aspect-[3/4] relative">
+                  <img
+                    src="assets/IMG_2207.jpg"
+                    alt="Barber při práci v moderním salonu"
+                    class="h-full w-full object-cover"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-background/85 via-transparent"></div>
+                  <div class="absolute bottom-0 inset-x-0 p-4 sm:p-5">
+                    <p class="text-xs sm:text-sm text-gray-300 mb-1">
+                      Precizní práce v každém detailu
+                    </p>
+                    <p class="text-xs sm:text-sm font-medium text-white text-gray-100/90">
+                      Pánské střihy, úprava vousů a osobní přístup v příjemné atmosféře.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Služby -->
+        <section
+          id="sluzby"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-14 md:py-18 border-t border-white/5"
+        >
+          <div class="max-w-3xl mb-8">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white mb-3">
+              Naše služby
+            </h2>
+            <p class="text-sm md:text-base text-gray-300 leading-relaxed">
+              Zaměřujeme se na to nejdůležitější – perfektní vlasy a upravené vousy.
+              Věnujeme vám plných 60 minut péče, abychom dosáhli maximální
+              preciznosti a vašeho komfortu.
+            </p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-6">
+            <!-- Service card -->
+            <article
+              class="group rounded-2xl bg-surface border border-white/5 hover:border-accent/60 hover:-translate-y-1 transition-all duration-200 shadow-lg shadow-black/40 hover:shadow-accent/20 p-5 flex flex-col"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-white">
+                  Klasický střih
+                </h3>
+                <span
+                  class="text-[11px] uppercase tracking-wide text-gray-400 px-2 py-1 rounded-full border border-white/10"
+                >
+                  60 minut
+                </span>
+              </div>
+              <p class="text-sm text-gray-300 leading-relaxed flex-1">
+                Precizní pánský střih nůžkami i strojkem, přesně podle vašich
+                představ a tvaru tváře.
+              </p>
+            </article>
+
+            <!-- Service card -->
+            <article
+              class="group rounded-2xl bg-surface border border-white/5 hover:border-accent/60 hover:-translate-y-1 transition-all duration-200 shadow-lg shadow-black/40 hover:shadow-accent/20 p-5 flex flex-col"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-white">
+                  Klasický střih a úprava vousů
+                </h3>
+                <span
+                  class="text-[11px] uppercase tracking-wide text-gray-400 px-2 py-1 rounded-full border border-white/10"
+                >
+                  60 minut
+                </span>
+              </div>
+              <p class="text-sm text-gray-300 leading-relaxed flex-1">
+                Kompletní péče pro moderního muže. Dokonalý střih vlasů doplněný o
+                profesionální úpravu, zarovnání a péči o vaše vousy.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Ceník -->
+        <section
+          id="cenik"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-14 md:py-18 border-t border-white/5"
+        >
+          <div class="max-w-3xl mb-8">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white mb-3">
+              Ceník
+            </h2>
+            <p class="text-sm md:text-base text-gray-300 leading-relaxed">
+              Kvalitní péče bez kompromisů.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Item -->
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl bg-surface px-4 py-3 border border-white/5"
+            >
+              <div>
+                <p class="text-sm font-medium text-white">
+                  Klasický střih
+                </p>
+                <p class="text-xs text-gray-400">
+                  60 minut • Precizní střih nůžkami i strojkem
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="text-xs text-gray-400">
+                  60 min
+                </span>
+                <span class="text-sm font-semibold text-accent">
+                  500 Kč
+                </span>
+              </div>
+            </div>
+
+            <!-- Item -->
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl bg-surface px-4 py-3 border border-white/5"
+            >
+              <div>
+                <p class="text-sm font-medium text-white">
+                  Klasický střih a úprava vousů
+                </p>
+                <p class="text-xs text-gray-400">
+                  60 minut • Kompletní péče o vlasy i vousy
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="text-xs text-gray-400">
+                  60 min
+                </span>
+                <span class="text-sm font-semibold text-accent">
+                  600 Kč
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Galerie -->
+        <section
+          id="galerie"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-14 md:py-18 border-t border-white/5"
+        >
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div class="max-w-2xl">
+              <h2 class="text-2xl md:text-3xl font-semibold text-white mb-3">
+                Moje práce
+              </h2>
+              <p class="text-sm md:text-base text-gray-300 leading-relaxed">
+                Prohlédněte si ukázky našich střihů a nahlédněte do atmosféry našeho
+                moderního holičství.
+              </p>
+            </div>
+          </div>
+
+          <!-- Grid gallery -->
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
+            <!-- 1 – Interiér -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2205.jpg"
+                alt="Interiér moderního barber shopu"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 2 – Barber u zrcadla -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2204.jpg"
+                alt="Barber při práci u zrcadla"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 3 – Detail práce nůžkami -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2206.jpg"
+                alt="Detail práce nůžkami v barber shopu"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 4 – Kreativní střih 1 -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2209.jpg"
+                alt="Detail kreativního pánského střihu"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 5 – Hotový střih zezadu -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2210.jpg"
+                alt="Hotový pánský střih zezadu"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 6 – Kreativní střih 2 -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors"
+            >
+              <img
+                src="assets/IMG_2211.jpg"
+                alt="Detail pánského fade střihu s designem"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+
+            <!-- 7 – Kreativní střih 3 -->
+            <div
+              class="group relative overflow-hidden rounded-2xl bg-surface border border-white/5 hover:border-accent/60 transition-colors md:col-span-2 md:col-start-2"
+            >
+              <img
+                src="assets/IMG_2212.jpg"
+                alt="Kreativní pánský střih s designem"
+                class="h-40 sm:h-44 md:h-52 w-full object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-transform duration-500 ease-out"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Rezervace -->
+        <section
+          id="rezervace"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-14 md:py-18 border-t border-white/5"
+        >
+          <div class="max-w-3xl mx-auto">
+            <div
+              class="rounded-2xl bg-surface border border-white/5 px-5 py-6 md:px-7 md:py-7 shadow-xl shadow-black/40"
+            >
+              <h2 class="text-2xl md:text-3xl font-semibold text-white mb-3">
+                Rezervujte si svůj čas
+              </h2>
+              <p class="text-sm md:text-base text-gray-300 leading-relaxed mb-6">
+                Vážíme si vašeho času, proto jsme pro vás připravili jednoduchý online
+                rezervační systém. Vyberte si službu a termín během několika kliknutí.
+              </p>
+
+              <!-- Important note box -->
+              <div
+                class="rounded-xl border border-accent/70 bg-gradient-to-r from-accent/15 via-accent/5 to-transparent px-4 py-4 md:px-5 md:py-5 text-sm text-gray-100 flex gap-3 mb-6"
+              >
+                <div class="mt-1 text-accent text-lg">
+                  ⚠️
+                </div>
+                <div>
+                  <p class="font-semibold mb-1">
+                    Důležité upozornění pro nové klienty:
+                  </p>
+                  <p class="text-sm text-gray-100 leading-relaxed">
+                    První rezervaci je možné vytvořit pouze po předchozí telefonické domluvě.
+                    Rádi se s vámi spojíme a domluvíme všechny detaily.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex justify-start">
+                <a
+                  href="https://noona.app/cs/ja/book?iframe=true&darkModeDisabled=true&showCancelButton=true"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-accent/80 bg-accent px-8 py-3 text-sm md:text-base font-semibold tracking-wide uppercase text-background shadow-lg shadow-black/60 hover:bg-accentSoft hover:border-accentSoft transform hover:-translate-y-0.5 hover:shadow-accent/40 transition-all duration-200"
+                >
+                  Rezervovat termín
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
+                      d="M5 12h14M13 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Kontakt -->
+        <section
+          id="kontakt"
+          class="fade-section scroll-mt-24 md:scroll-mt-28 py-14 md:py-18 border-t border-white/5 mb-12"
+        >
+          <div class="grid md:grid-cols-2 gap-10 items-start">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-semibold text-white mb-3">
+                Kde nás najdete
+              </h2>
+              <p class="text-sm md:text-base text-gray-300 leading-relaxed mb-6">
+                Přijďte se přesvědčit o našich kvalitách osobně. Těšíme se na vaši
+                návštěvu.
+              </p>
+
+              <dl class="space-y-5 text-sm">
+                <div>
+                  <dt class="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                    Adresa
+                  </dt>
+                  <dd class="text-gray-100">
+                    Za Cihelnou 540,<br />
+                    252 62 Statenice,<br />
+                    Česká republika
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                    Telefon
+                  </dt>
+                  <dd>
+                    <a
+                      href="tel:+420777123456"
+                      class="inline-flex items-center gap-2 rounded-full border border-accent/60 bg-accent/10 px-4 py-2 text-sm font-medium text-accent hover:bg-accent hover:text-background hover:border-accentSoft transition-colors shadow-sm hover:shadow-accent/30"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
+                        <path
+                          d="M5 4h3l2 5-2 1c.7 1.9 2.1 3.3 4 4l1-2 5 2v3c0 .6-.4 1-1 1A14 14 0 0 1 4 6c0-.6.4-1 1-1Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <span>+420 777 123 456</span>
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Map / socials -->
+            <div class="space-y-7">
+              <!-- Google Maps embed -->
+              <div
+                class="rounded-2xl bg-surface border border-white/5 overflow-hidden h-52 md:h-60"
+              >
+                <iframe
+                  src="https://www.google.com/maps?q=Za%20Cihelnou%20540%2C%20Statenice%2C%20%C4%8Cesk%C3%A1%20republika&output=embed"
+                  width="100%"
+                  height="100%"
+                  style="border:0;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Mapa – Za Cihelnou 540, Statenice"
+                ></iframe>
+              </div>
+
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <p class="text-sm text-gray-300 font-medium">
+                  Sledujte nás na sociálních sítích:
+                </p>
+                <div class="flex items-center gap-3">
+                  <!-- Instagram -->
+                  <a
+                    href="https://www.instagram.com/vanekjosefbarber/"
+                    aria-label="Instagram"
+                    class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-surface hover:border-accent/80 hover:text-accent transition-colors shadow-sm hover:shadow-accent/30"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                      class="h-5 w-5">
+                      <defs>
+                        <linearGradient id="instaGradient" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0%" stop-color="#f5e3b3" />
+                          <stop offset="100%" stop-color="#c7a76a" />
+                        </linearGradient>
+                      </defs>
+                      <rect x="4" y="4" width="16" height="16" rx="5"
+                        fill="none" stroke="url(#instaGradient)" stroke-width="1.5" />
+                      <circle cx="12" cy="12" r="3.3" fill="none" stroke="currentColor"
+                        stroke-width="1.5" />
+                      <circle cx="17" cy="7" r="1" fill="currentColor" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-6 text-xs text-gray-500">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
+        <p>
+          © <span id="year"></span> Josef Vaněk – Pánské kadeřnictví & Barber
+        </p>
+        <p class="text-[11px] text-gray-500">
+          Kvalitní střih, osobní přístup a moderní barber atmosféra.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript: mobile nav, smooth scroll offset, scroll animations -->
+  <script>
+    // Dynamic year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile navigation toggle
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconMenu = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.style.maxHeight && mobileMenu.style.maxHeight !== '0px';
+        if (isOpen) {
+          mobileMenu.style.maxHeight = '0px';
+          iconMenu.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        } else {
+          mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+          iconMenu.classList.add('hidden');
+          iconClose.classList.remove('hidden');
+        }
+      });
+
+      // Close mobile menu on link click
+      mobileMenu.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.style.maxHeight = '0px';
+          iconMenu.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        });
+      });
+    }
+
+    // Smooth scroll with header offset
+    const header = document.querySelector('header');
+
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href').substring(1);
+        const targetEl = document.getElementById(targetId);
+
+        if (targetEl) {
+          e.preventDefault();
+          const headerHeight = header ? header.offsetHeight : 0;
+          const rect = targetEl.getBoundingClientRect();
+          const offsetTop = rect.top + window.scrollY - (headerHeight + 8);
+
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Simple fade-in on scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.18
+      }
+    );
+
+    document.querySelectorAll('.fade-section').forEach((section) => {
+      observer.observe(section);
+    });
+  </script>
+</body>
+</html>
